@@ -5,7 +5,6 @@
 @endsection
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('css/flatpickr.min.css') }}">
 
     <style>
         
@@ -15,7 +14,6 @@
         .profile_image_view{
             position: absolute;
             width: 180px;
-            border-radius: 50%;
             right: 20px;
             top: 20px;
 
@@ -29,6 +27,9 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+                        @if($is_there->profile_pic)
+                                        <img src="{{ asset('upload/employee_images/'.$is_there->profile_pic) }}" class="profile_image_view" alt="Profile Picture">
+                                        @endif
                         <h4 class="mb-5 card-title">Employee Information</h4>
                         <form action="{{ route('admin.edit_employee_submit', $is_there->id) }}" method="post" enctype="multipart/form-data">
                             @method('put')
@@ -56,11 +57,11 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="validationEmail" class="form-label">Employee Company Email</label>
+                                    <label for="validationCompanyEmail" class="form-label">Employee Company Email</label>
                                     <div class="input-group has-validation">
-                                        <span class="input-group-text" id="PersonalEmailGroupPrepend">@</span>
+                                        <span class="input-group-text" id="CompanyEmailGroupPrepend">@</span>
                                         <input type="email" class="form-control" name="email" value="{{ $is_there->email }}"
-                                            id="validationEmail" aria-describedby="PersonalEmailGroupPrepend" required>
+                                            id="validationCompanyEmail" aria-describedby="CompanyEmailGroupPrepend" required>
                                         @error('email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -131,11 +132,11 @@
                             </div>
                             <div class="mb-3 row">
                                 <div class="col-md-4">
-                                    <label for="validationNID" class="form-label">NID</label>
-                                    <input type="text" class="form-control" id="validationNID" name="nid"
-                                        value="{{ $is_there->nid }}">
+                                    <label for="validationSIN" class="form-label">SIN</label>
+                                    <input type="text" class="form-control" id="validationSIN" name="sin"
+                                        value="{{ $is_there->sin }}">
                                     <div class="invalid-feedback">
-                                        Please enter NID.
+                                        Please enter SIN.
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -157,8 +158,8 @@
                             </div>
                             <div class="mb-3 row">
                                 <div class="col-md-12">
-                                    <label class="form-label">Address</label>
-                                    <textarea id="textarea" class="form-control" name="address" maxlength="225" rows="3">{{ $is_there->address }}</textarea>
+                                    <label for="validationAddress" class="form-label">Address</label>
+                                    <textarea class="form-control" id="validationAddress" name="address" maxlength="225" rows="3">{{ $is_there->address }}</textarea>
                                     <div class="invalid-feedback">
                                         Please enter Address.
                                     </div>
@@ -168,11 +169,9 @@
                                 <div class="col-md-4">
                                     <label for="employee_image" class="form-label">Image</label>
                                     <div class="form-group">
-                                        @if($is_there->profile_pic)
-                                        <img src="{{ asset('upload/employee_images/'.$is_there->profile_pic) }}" class="profile_image_view" alt="Profile Picture">
-                                        @endif
+                                        
                                         <input type="file" class="form-control-file" name="profile_pic"
-                                            id="employee_image" onchange="image_verify(this)" required>
+                                            id="employee_image" onchange="image_verify(this)">
                                         <p id="employee_image-result" class="alert alert-danger d-none my-2"></p>
                                         <p class="help-block text-red">Only jpg/png are allowed.</p>
                                         @error('profile_pic')
@@ -189,18 +188,11 @@
                         </form>
                     </div>
                 </div>
-            </div> <!-- end col -->
+            </div>
         </div>
-        <!-- end row -->
 
     </div>
 @endsection
 
 @push('script')
-    {{-- Intializing Flatpickr --}}
-    <script src="{{ asset('js/flatpickr.min.js') }}"></script>
-
-    <script>
-        flatpickr("#validationDOB", {});
-    </script>
 @endpush

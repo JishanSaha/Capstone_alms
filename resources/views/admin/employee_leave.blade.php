@@ -50,7 +50,7 @@
                                 <tbody>
                                     @if ($employees_leave_info_array_size == 0)
                                         <tr>
-                                            <td colspan="4" class="text-center">No Records Found</td>
+                                            <td colspan="10" class="text-center">No Records Found</td>
                                         </tr>
                                     @else
                                         @foreach ($employees_leave_info as $each_employee_leave_info)
@@ -108,14 +108,11 @@
                                     @endif
                                 </tbody>
                             </table>
-
-
                         </div>
                     </div>
                 </div>
-            </div> <!-- end col -->
+            </div>
         </div>
-        <!-- end row -->
 
     </div>
 @endsection

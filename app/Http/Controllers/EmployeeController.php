@@ -11,8 +11,6 @@ use DB;
 
 use App\Models\Employee;
 use App\Models\EmployeesLeave;
-use App\Models\Holidays;
-use App\Models\Holidays_view;
 use App\Models\LeavePolicy;
 use App\Models\Attendance;
 
@@ -54,12 +52,13 @@ class EmployeeController extends Controller
 
     public function dashboard()
     {
-        $holidays = Holidays_view::whereYear('date',Carbon::now()->format('Y'))->whereDate('date', '>=', Carbon::now())->limit(5)->get();
-        $holiday_array_size = $holidays->count();
-        // dd($holidays->count());
-        $all_leave_info  = EmployeesLeave::whereYear('start_date',Carbon::now()->format('Y'))->latest()->limit(5)->get();
+        $employee_name = Auth::guard('employee')->user()->first_name ." ". Auth::guard('employee')->user()->last_name;
+        $attendance_info = Attendance::where('employee_id',Auth::guard('employee')->user()->id)->latest()->limit(5)->get();
+        // dd($Auth::guard('employee')->user());
+        $attendance_info_array_size = $attendance_info->count();
+        $all_leave_info  = EmployeesLeave::where('employee_id',Auth::guard('employee')->user()->id)->whereYear('start_date',Carbon::now()->format('Y'))->latest()->limit(5)->get();
         $all_leave_info_array_size = $all_leave_info->count();
-        return view('employee.dashboard',compact('holidays','holiday_array_size','all_leave_info','all_leave_info_array_size'));
+        return view('employee.dashboard',compact('employee_name','attendance_info','attendance_info_array_size','all_leave_info','all_leave_info_array_size'));
     }
 
     public function profile(){
@@ -116,6 +115,10 @@ class EmployeeController extends Controller
             'reason' =>'required',
         ]);
 
+        if($request->start_time > $request->end_time){
+            return back()->with('error', 'End Time must be greater than Start Time');
+        }
+
         $data = [
             'employee_id'=>Auth::guard('employee')->user()->id,
             'attendace_date' =>$request->attendace_date,
@@ -134,8 +137,7 @@ class EmployeeController extends Controller
     }
 
     public function apply_leave(){
-        // $old_leave_info = EmployeesLeave::where('e_id',Auth::guard('employee')->user()->id)->get();
-        $all_leave_info = EmployeesLeave::where('employee_id',Auth::guard('employee')->user()->id)->whereYear('created_at', Carbon::now()->format('Y'))->get();
+        $all_leave_info = EmployeesLeave::where('employee_id',Auth::guard('employee')->user()->id)->whereYear('created_at', Carbon::now()->format('Y'))->latest()->get();
         if(Auth::guard('employee')->user()->company_location == 0){
             $leave_policy = LeavePolicy::where('company_location',0)->first();
             $sick = $leave_policy->sick;
@@ -219,10 +221,14 @@ class EmployeeController extends Controller
             'leave_reason'=>'required',
         ]);
 
-        if($request->enddate){
+        if($request->end_date){
             $request->validate([
                 'end_date'=>'date'
             ]);
+
+            if($request->start_date > $request->end_date){
+                return back()->with('error', 'End Date must be greater than Start Date');
+            }
         }
         
         if(Auth::guard('employee')->user()->company_location == 0){
@@ -253,15 +259,12 @@ class EmployeeController extends Controller
                 $startDate = Carbon::parse($request->start_date);
                 $endDate = Carbon::parse($request->end_date);
                 $diffInDays = $startDate->diffInDays($endDate) + 1;
-                $num_of_weekend_between_dates = $startDate->diffInDaysFiltered(function (Carbon $date){return !$date->isWeekday();}, $endDate);
-                $num_of_govt_holidays = Holidays::where('company_location',0)->whereBetween('date',[$request->start_date,$request->end_date])->get()->count();
-                $total_num_of_holidays = $diffInDays - $num_of_weekend_between_dates - $num_of_govt_holidays;
                 $data = [
                     'employee_id'=>Auth::guard('employee')->user()->id,
                     'leave_type'=>$request->leave_type,
                     'start_date'=>$request->start_date,
                     'end_date'=>$request->end_date,
-                    'number_of_days'=>$total_num_of_holidays,
+                    'number_of_days'=>$diffInDays,
                     'leave_reason'=>$request->leave_reason,
                     'status'=>0,
                 ];
@@ -275,7 +278,7 @@ class EmployeeController extends Controller
                 }
             }
         }else{
-            // India Employees
+            // Canada Employees
             if(($request->start_date == $request->end_date) || ($request->start_date && is_null($request->end_date))){
                 $diffInDays = 1;
                 $data = [
@@ -302,15 +305,12 @@ class EmployeeController extends Controller
                 $startDate = Carbon::parse($request->start_date);
                 $endDate = Carbon::parse($request->end_date);
                 $diffInDays = $startDate->diffInDays($endDate) + 1;
-                $num_of_weekend_between_dates = $startDate->diffInDaysFiltered(function (Carbon $date){return !$date->isWeekday();}, $endDate);
-                $num_of_govt_holidays = Holidays::where('company_location',1)->whereBetween('date',[$request->start_date,$request->end_date])->get()->count();
-                $total_num_of_holidays = $diffInDays - $num_of_weekend_between_dates - $num_of_govt_holidays;
                 $data = [
                     'employee_id'=>Auth::guard('employee')->user()->id,
                     'leave_type'=>$request->leave_type,
                     'start_date'=>$request->start_date,
                     'end_date'=>$request->end_date,
-                    'number_of_days'=>$total_num_of_holidays,
+                    'number_of_days'=>$diffInDays,
                     'leave_reason'=>$request->leave_reason,
                     'status'=>0,
                 ];

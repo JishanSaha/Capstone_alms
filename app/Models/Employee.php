@@ -21,7 +21,7 @@ class Employee extends Authenticatable
         'gender',
         'personal_phone',
         'personal_email',
-        'nid',
+        'sin',
         'address',
         'department',
         'degree',

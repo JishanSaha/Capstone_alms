@@ -80,9 +80,8 @@
                         </form>
                     </div>
                 </div>
-            </div> <!-- end col -->
+            </div>
         </div>
-        <!-- end row -->
 
     </div>
 @endsection
