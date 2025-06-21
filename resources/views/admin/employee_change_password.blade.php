@@ -5,12 +5,6 @@
 @endsection
 
 @push('css')
-    {{-- <style>
-        .alert-danger,
-        .alert-success {
-            margin-bottom: 0px;
-        }
-    </style> --}}
 @endpush
 
 @section('body')
@@ -71,9 +65,8 @@
                         </form>
                     </div>
                 </div>
-            </div> <!-- end col -->
+            </div>
         </div>
-        <!-- end row -->
     </div>
 @endsection
 
@@ -81,32 +74,24 @@
     <script>
         function validateNewPassword() {
             // Get form fields
-            // const current_pass = document.getElementById("validationCurrentPassword").value;
             const new_pass = document.getElementById("validationPassword").value;
             const confirm_pass = document.getElementById("validationConfirmPassword").value;
-            // const current_password_missing = $('#current_password_missing');
             const pass_match = $('#pass_match');
             const pass_not_match = $('#pass_not_match');
 
             if (new_pass == confirm_pass && new_pass.length != 0 && confirm_pass.length != 0) {
-                // current_password_missing.removeClass('d-block');
-                // current_password_missing.addClass('d-none');
                 pass_match.removeClass('d-none');
                 pass_match.addClass('d-block');
                 pass_not_match.removeClass('d-block');
                 pass_not_match.addClass('d-none');
                 document.getElementById("submit_button").disabled = false;
             } else if (new_pass != confirm_pass && new_pass.length != 0 && confirm_pass.length != 0) {
-                // current_password_missing.removeClass('d-block');
-                // current_password_missing.addClass('d-none');
                 pass_not_match.removeClass('d-none');
                 pass_not_match.addClass('d-block');
                 pass_match.removeClass('d-block');
                 pass_match.addClass('d-none');
                 document.getElementById("submit_button").disabled = true;
             } else {
-                // current_password_missing.removeClass('d-block');
-                // current_password_missing.addClass('d-none');
                 pass_not_match.removeClass('d-block');
                 pass_not_match.addClass('d-none');
                 pass_match.removeClass('d-block');

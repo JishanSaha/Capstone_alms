@@ -5,7 +5,6 @@
 @endsection
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('css/flatpickr.min.css') }}">
 @endpush
 
 @section('body')
@@ -38,7 +37,7 @@
                                         <option value="0">
                                             Bangladesh</option>
                                         <option value="1">
-                                            India</option>
+                                            Canada</option>
                                     </select>
                                     @error('company_location')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -54,11 +53,11 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="validationEmail" class="form-label">Employee Company Email</label>
+                                    <label for="validationCompanyEmail" class="form-label">Employee Company Email</label>
                                     <div class="input-group has-validation">
-                                        <span class="input-group-text" id="PersonalEmailGroupPrepend">@</span>
+                                        <span class="input-group-text" id="CompanyEmailGroupPrepend">@</span>
                                         <input type="email" class="form-control" name="email"
-                                            id="validationEmail" aria-describedby="PersonalEmailGroupPrepend" required>
+                                            id="validationCompanyEmail" aria-describedby="CompanyEmailGroupPrepend" required>
                                         @error('email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -96,7 +95,7 @@
                                 <div class="col-md-4">
                                     <label for="validationDOB" class="form-label">Date of Birth</label>
                                     <div class="input-group has-validation">
-                                        <input type="date" class="form-control" id="validationDOB" name="birthday" required>
+                                        <input id="validationDOB" type="date" class="form-control" name="birthday" required>
                                     </div>
                                     @error('birthday')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -125,9 +124,9 @@
                             </div>
                             <div class="mb-3 row">
                                 <div class="col-md-4">
-                                    <label for="validationNID" class="form-label">NID</label>
-                                    <input type="text" class="form-control" id="validationNID" name="nid" required>
-                                    @error('nid')
+                                    <label for="validationSIN" class="form-label">SIN</label>
+                                    <input type="text" class="form-control" id="validationSIN" name="sin">
+                                    @error('sin')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -149,8 +148,8 @@
                             </div>
                             <div class="mb-3 row">
                                 <div class="col-md-12">
-                                    <label class="form-label">Address</label>
-                                    <textarea id="textarea" class="form-control" name="address" maxlength="225" rows="3" required></textarea>
+                                    <label for="validationAddress" class="form-label">Address</label>
+                                    <textarea id="validationAddress" class="form-control" name="address" maxlength="225" rows="3" required></textarea>
                                     @error('address')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -178,18 +177,11 @@
                         </form>
                     </div>
                 </div>
-            </div> <!-- end col -->
+            </div>
         </div>
-        <!-- end row -->
 
     </div>
 @endsection
 
 @push('script')
-    {{-- Intializing Flatpickr --}}
-    <script src="{{ asset('js/flatpickr.min.js') }}"></script>
-
-    <script>
-        flatpickr("#validationDOB", {});
-    </script>
 @endpush
